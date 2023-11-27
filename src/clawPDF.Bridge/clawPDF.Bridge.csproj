@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>clawPDF.Bridge</RootNamespace>
     <AssemblyName>clawPDF.Bridge</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -37,7 +37,7 @@
     <StartupObject>clawPDF.Bridge.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>signClawPDF.pfx</AssemblyOriginatorKeyFile>

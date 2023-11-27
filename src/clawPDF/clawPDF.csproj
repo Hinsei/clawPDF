@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>clawSoft.clawPDF</RootNamespace>
     <AssemblyName>clawPDF</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -54,7 +54,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects> -->
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>clawPDF.ico</ApplicationIcon>
