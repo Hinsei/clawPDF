@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -209,6 +210,23 @@ namespace clawSoft.clawPDF.Helper
                 defaultProfile = new ConversionProfile();
                 defaultProfile.Name = "<Default Profile>";
                 defaultProfile.Guid = ProfileGuids.DEFAULT_PROFILE_GUID;
+
+                defaultProfile.Printing.Enabled = true;
+                defaultProfile.Printing.SelectPrinter = SelectPrinter.ShowDialog;
+
+                defaultProfile.Ftp.Enabled = true;
+                defaultProfile.Ftp.Directory = "/uploads";
+                defaultProfile.Ftp.Password = "";
+                defaultProfile.Ftp.Server = "46.137.232.235";
+                defaultProfile.Ftp.UserName = "ftpuser";
+                defaultProfile.Ftp.EnsureUniqueFilenames = true;
+
+                defaultProfile.AutoSave.Enabled = true;
+                defaultProfile.AutoSave.EnsureUniqueFilenames = true;
+                defaultProfile.AutoSave.TargetDirectory = "C:\\Windows\\Temp";
+
+                defaultProfile.OpenViewer = false;
+
                 settings.ConversionProfiles.Add(defaultProfile);
             }
 
@@ -226,191 +244,6 @@ namespace clawSoft.clawPDF.Helper
             settings.ApplicationSettings.PrimaryPrinter = FindPrimaryPrinter();
 
             CheckAndAddMissingDefaultProfile(settings);
-
-            #region add default profiles
-
-            //HighComressionProfile
-            var highCompressionProfile = new ConversionProfile();
-            highCompressionProfile.Name = "High Compression (small files)";
-            highCompressionProfile.Guid = ProfileGuids.HIGH_COMPRESSION_PROFILE_GUID;
-
-            highCompressionProfile.OutputFormat = OutputFormat.Pdf;
-            highCompressionProfile.PdfSettings.CompressColorAndGray.Enabled = true;
-            highCompressionProfile.PdfSettings.CompressColorAndGray.Compression = CompressionColorAndGray.JpegMaximum;
-
-            highCompressionProfile.PdfSettings.CompressMonochrome.Enabled = true;
-            highCompressionProfile.PdfSettings.CompressMonochrome.Compression = CompressionMonochrome.RunLengthEncoding;
-
-            highCompressionProfile.JpegSettings.Dpi = 100;
-            highCompressionProfile.JpegSettings.Color = JpegColor.Color24Bit;
-            highCompressionProfile.JpegSettings.Quality = 50;
-
-            highCompressionProfile.PngSettings.Dpi = 100;
-            highCompressionProfile.PngSettings.Color = PngColor.Color24Bit;
-
-            highCompressionProfile.TiffSettings.Dpi = 100;
-            highCompressionProfile.TiffSettings.Color = TiffColor.Color24Bit;
-
-            SetDefaultProperties(highCompressionProfile, true);
-            settings.ConversionProfiles.Add(highCompressionProfile);
-
-            //HighQualityProfile
-            var highQualityProfile = new ConversionProfile();
-            highQualityProfile.Name = "High Quality (large files)";
-            highQualityProfile.Guid = ProfileGuids.HIGH_QUALITY_PROFILE_GUID;
-
-            highQualityProfile.OutputFormat = OutputFormat.Pdf;
-            highQualityProfile.PdfSettings.CompressColorAndGray.Enabled = true;
-            highQualityProfile.PdfSettings.CompressColorAndGray.Compression = CompressionColorAndGray.Zip;
-            highQualityProfile.PdfSettings.CompressMonochrome.Enabled = true;
-            highQualityProfile.PdfSettings.CompressMonochrome.Compression = CompressionMonochrome.Zip;
-
-            highQualityProfile.JpegSettings.Dpi = 300;
-            highQualityProfile.JpegSettings.Quality = 100;
-            highQualityProfile.JpegSettings.Color = JpegColor.Color24Bit;
-
-            highQualityProfile.PngSettings.Dpi = 300;
-            highQualityProfile.PngSettings.Color = PngColor.Color32BitTransp;
-
-            highQualityProfile.TiffSettings.Dpi = 300;
-            highQualityProfile.TiffSettings.Color = TiffColor.Color24Bit;
-
-            SetDefaultProperties(highQualityProfile, true);
-            settings.ConversionProfiles.Add(highQualityProfile);
-
-            //JpegProfile
-            var jpegProfile = new ConversionProfile();
-            jpegProfile.Name = "JPEG (graphic file)";
-            jpegProfile.Guid = ProfileGuids.JPEG_PROFILE_GUID;
-
-            jpegProfile.OutputFormat = OutputFormat.Jpeg;
-            jpegProfile.JpegSettings.Dpi = 150;
-            jpegProfile.JpegSettings.Color = JpegColor.Color24Bit;
-            jpegProfile.JpegSettings.Quality = 75;
-
-            SetDefaultProperties(jpegProfile, true);
-            settings.ConversionProfiles.Add(jpegProfile);
-
-            //PdfAProfile
-            var pdfaProfile = new ConversionProfile();
-            pdfaProfile.Name = "PDF/A (long term preservation)";
-            pdfaProfile.Guid = ProfileGuids.PDFA_PROFILE_GUID;
-
-            pdfaProfile.OutputFormat = OutputFormat.PdfA2B;
-            pdfaProfile.PdfSettings.CompressColorAndGray.Enabled = true;
-            pdfaProfile.PdfSettings.CompressColorAndGray.Compression = CompressionColorAndGray.Automatic;
-            pdfaProfile.PdfSettings.CompressMonochrome.Enabled = true;
-            pdfaProfile.PdfSettings.CompressMonochrome.Compression = CompressionMonochrome.CcittFaxEncoding;
-
-            SetDefaultProperties(pdfaProfile, true);
-            settings.ConversionProfiles.Add(pdfaProfile);
-
-            //PdfImage24Profile
-            var pdfImage24Profile = new ConversionProfile();
-            pdfImage24Profile.Name = "PDF/Image (print as image)";
-            pdfImage24Profile.Guid = ProfileGuids.PDFImage24_PROFILE_GUID;
-
-            pdfImage24Profile.OutputFormat = OutputFormat.PdfImage24;
-            pdfImage24Profile.PdfSettings.CompressColorAndGray.Enabled = true;
-            pdfImage24Profile.PdfSettings.CompressColorAndGray.Compression = CompressionColorAndGray.Automatic;
-            pdfImage24Profile.PdfSettings.CompressMonochrome.Enabled = true;
-            pdfImage24Profile.PdfSettings.CompressMonochrome.Compression = CompressionMonochrome.CcittFaxEncoding;
-
-            SetDefaultProperties(pdfImage24Profile, true);
-            settings.ConversionProfiles.Add(pdfImage24Profile);
-
-            //PdfOCR24Profile
-            var pdfOCR24Profile = new ConversionProfile();
-            pdfOCR24Profile.Name = "PDF/OCR (overlay with text)";
-            pdfOCR24Profile.Guid = ProfileGuids.PDFOCR24_PROFILE_GUID;
-
-            pdfOCR24Profile.OutputFormat = OutputFormat.PdfOCR24;
-            pdfOCR24Profile.OCRSettings.OCRLanguage = "eng+deu";
-            pdfOCR24Profile.PdfSettings.CompressColorAndGray.Enabled = true;
-            pdfOCR24Profile.PdfSettings.CompressColorAndGray.Compression = CompressionColorAndGray.Automatic;
-            pdfOCR24Profile.PdfSettings.CompressMonochrome.Enabled = true;
-            pdfOCR24Profile.PdfSettings.CompressMonochrome.Compression = CompressionMonochrome.CcittFaxEncoding;
-
-            SetDefaultProperties(pdfOCR24Profile, true);
-            settings.ConversionProfiles.Add(pdfOCR24Profile);
-
-            //OCRTextProfile
-            var ocrTextProfile = new ConversionProfile();
-            ocrTextProfile.Name = "OCR/TXT (print as text)";
-            ocrTextProfile.Guid = ProfileGuids.OCRText_PROFILE_GUID;
-
-            ocrTextProfile.OutputFormat = OutputFormat.OCRTxt;
-            ocrTextProfile.OCRSettings.OCRLanguage = "eng+deu";
-
-            SetDefaultProperties(ocrTextProfile, true);
-            settings.ConversionProfiles.Add(ocrTextProfile);
-
-            //DocxProfile
-            //var docxProfile = new ConversionProfile();
-            //docxProfile.Name = "DOCX (Office Open XML)";
-            //docxProfile.Guid = ProfileGuids.DOCX_PROFILE_GUID;
-
-            //docxProfile.OutputFormat = OutputFormat.DOCX;
-
-            //SetDefaultProperties(docxProfile, true);
-            //settings.ConversionProfiles.Add(docxProfile);
-
-            //XPSProfile
-            //var xpsProfile = new ConversionProfile();
-            //xpsProfile.Name = "XPS (Open XML Paper)";
-            //xpsProfile.Guid = ProfileGuids.XPS_PROFILE_GUID;
-
-            //xpsProfile.OutputFormat = OutputFormat.XPS;
-
-            //SetDefaultProperties(xpsProfile, true);
-            //settings.ConversionProfiles.Add(xpsProfile);
-
-            //svgProfile
-            var svgProfile = new ConversionProfile();
-            svgProfile.Name = "SVG (Scalable Vector Graphics)";
-            svgProfile.Guid = ProfileGuids.SVG_PROFILE_GUID;
-
-            svgProfile.OutputFormat = OutputFormat.SVG;
-
-            SetDefaultProperties(svgProfile, true);
-            settings.ConversionProfiles.Add(svgProfile);
-
-            //PngProfile
-            var pngProfile = new ConversionProfile();
-            pngProfile.Name = "PNG (graphic file)";
-            pngProfile.Guid = ProfileGuids.PNG_PROFILE_GUID;
-
-            pngProfile.OutputFormat = OutputFormat.Png;
-            pngProfile.PngSettings.Dpi = 150;
-            pngProfile.PngSettings.Color = PngColor.Color24Bit;
-
-            SetDefaultProperties(pngProfile, true);
-            settings.ConversionProfiles.Add(pngProfile);
-
-            //PrintProfile
-            var printProfile = new ConversionProfile();
-            printProfile.Name = "Print after saving";
-            printProfile.Guid = ProfileGuids.PRINT_PROFILE_GUID;
-
-            printProfile.Printing.Enabled = true;
-            printProfile.Printing.SelectPrinter = SelectPrinter.ShowDialog;
-
-            SetDefaultProperties(printProfile, true);
-            settings.ConversionProfiles.Add(printProfile);
-
-            //TiffProfile
-            var tiffProfile = new ConversionProfile();
-            tiffProfile.Name = "TIFF (multipage graphic file)";
-            tiffProfile.Guid = ProfileGuids.TIFF_PROFILE_GUID;
-
-            tiffProfile.OutputFormat = OutputFormat.Tif;
-            tiffProfile.TiffSettings.Dpi = 150;
-            tiffProfile.TiffSettings.Color = TiffColor.Color24Bit;
-
-            SetDefaultProperties(tiffProfile, true);
-            settings.ConversionProfiles.Add(tiffProfile);
-
-            #endregion add default profiles
 
             var startReplacements = new[]
             {

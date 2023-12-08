@@ -250,8 +250,10 @@ namespace clawSoft.clawPDF.Core.Jobs
         /// <returns>composed output filename</returns>
         public string ComposeOutputFilename()
         {
+            var timestamp = DateTime.Now;
+            var strftime = timestamp.ToString("yyyyMMddHHmmss");
             var outputFilename =
-                FileUtil.Instance.MakeValidFileName(TokenReplacer.ReplaceTokens(Profile.FileNameTemplate));
+                FileUtil.Instance.MakeValidFileName(TokenReplacer.ReplaceTokens(Profile.FileNameTemplate)) + "_" + strftime;
 
             switch (Profile.OutputFormat)
             {

@@ -70,7 +70,8 @@ namespace clawSoft.clawPDF.Core.Jobs
         private void AddSourceFileTokens(SourceFileInfo sourceFileInfo)
         {
             _tokenReplacer.AddStringToken("ClientComputer", sourceFileInfo.ClientComputer);
-            _tokenReplacer.AddNumberToken("Counter", sourceFileInfo.JobCounter);
+            //remove counter being placed in generated file name
+            //_tokenReplacer.AddNumberToken("Counter", sourceFileInfo.JobCounter);
             _tokenReplacer.AddNumberToken("JobId", sourceFileInfo.JobId);
             _tokenReplacer.AddStringToken("PrinterName", sourceFileInfo.PrinterName);
             _tokenReplacer.AddNumberToken("SessionId", sourceFileInfo.SessionId);
