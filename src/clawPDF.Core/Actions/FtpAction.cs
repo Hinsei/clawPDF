@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using clawSoft.clawPDF.Core.Jobs;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.ftplib.FtpLib;
+using clawSoft.clawPDF.ftpaiman.FtpUploader;
 using NLog;
 
 namespace clawSoft.clawPDF.Core.Actions
@@ -87,6 +88,7 @@ namespace clawSoft.clawPDF.Core.Actions
 
             Logger.Debug("Creating ftp connection.\r\nServer: " + job.Profile.Ftp.Server + "\r\nUsername: " +
                          job.Profile.Ftp.UserName);
+            var aimanftp = new FtpUploader(job.Profile.Ftp.Server, job.Profile.Ftp.UserName, job.Passwords.FtpPassword);
             var ftp = new FtpConnection(job.Profile.Ftp.Server, job.Profile.Ftp.UserName, job.Passwords.FtpPassword);
 
             try
@@ -169,6 +171,7 @@ namespace clawSoft.clawPDF.Core.Actions
                 try
                 {
                     var targetFile = Path.GetFileNameWithoutExtension(file) + addendum + Path.GetExtension(file);
+                    aimanftp.UploadFile(file, MakeValidPath(targetFile));
                     ftp.PutFile(file, MakeValidPath(targetFile));
                 }
                 catch (Exception ex)

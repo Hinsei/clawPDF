@@ -133,6 +133,10 @@
     <Compile Include="Xps\XpsConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\MulahFtp\ftpaiman.csproj">
+      <Project>{eb0835b2-c69c-4272-9100-b7bba0179f26}</Project>
+      <Name>ftpaiman</Name>
+    </ProjectReference>
     <ProjectReference Include="..\clawPDF.Mail\clawPDF.Mail.csproj">
       <Project>{884d14eb-6d78-41d8-b022-968209dd6ce4}</Project>
       <Name>clawPDF.Mail</Name>
