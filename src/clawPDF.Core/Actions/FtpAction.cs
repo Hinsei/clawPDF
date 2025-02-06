@@ -128,27 +128,6 @@ namespace clawSoft.clawPDF.Core.Actions
 
             var directories = fullDirectory.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
 
-            try
-            {
-                foreach (var directory in directories)
-                {
-                    if (!ftp.DirectoryExists(directory))
-                    {
-                        Logger.Debug("Create folder: " + directory);
-                        ftp.CreateDirectory(directory);
-                    }
-
-                    Logger.Debug("Move to: " + directory);
-                    ftp.SetCurrentDirectory(directory);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Exception while setting directory on ftp server\r\n:" + ex.Message);
-                ftp.Close();
-                return new ActionResult(ActionId, 105);
-            }
-
             var addendum = "";
             if (job.Profile.Ftp.EnsureUniqueFilenames)
             {
@@ -172,7 +151,6 @@ namespace clawSoft.clawPDF.Core.Actions
                 {
                     var targetFile = Path.GetFileNameWithoutExtension(file) + addendum + Path.GetExtension(file);
                     aimanftp.UploadFile(file, MakeValidPath(targetFile));
-                    ftp.PutFile(file, MakeValidPath(targetFile));
                 }
                 catch (Exception ex)
                 {
