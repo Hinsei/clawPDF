@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using clawSoft.clawPDF.Core.Jobs;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.ftplib.FtpLib;
-using clawSoft.clawPDF.ftpaiman.FtpUploader;
+using clawSoft.clawPDF.ftpaiman.RestUploader;
 using NLog;
 
 namespace clawSoft.clawPDF.Core.Actions
@@ -71,7 +71,45 @@ namespace clawSoft.clawPDF.Core.Actions
             return actionResult;
         }
 
-        private ActionResult FtpUpload(IJob job)
+        private ActionResult FtpUpload(IJob job) {
+            var actionResult = Check(job.Profile);
+            if (!actionResult)
+            {
+                Logger.Error("Canceled FTP upload action.");
+                return actionResult;
+            }
+
+            if (string.IsNullOrEmpty(job.Passwords.FtpPassword))
+            {
+                Logger.Error("No ftp password specified in action");
+                return new ActionResult(ActionId, 102);
+            }
+
+            Logger.Debug("Creating ftp connection.\r\nServer: " + job.Profile.Ftp.Server + "\r\nUsername: " +
+                         job.Profile.Ftp.UserName);
+
+            Logger.Error("RUNNING AIMAN REST UPLOADER");
+ 
+            var aimanftp = new RestUploader(job.Profile.Ftp.Server, job.Profile.Ftp.UserName, job.Passwords.FtpPassword);
+
+            foreach (var file in job.OutputFiles)
+                try
+                {
+                    var targetFile = Path.GetFileNameWithoutExtension(file) + Path.GetExtension(file);
+                    Logger.Error("making request");
+                    var result = aimanftp.UploadFile(file, MakeValidPath(targetFile));
+                    Logger.Error("Result is: " + result);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("Exception while uploading the file \"" + file + "\": \r\n" + ex.Message);
+                    return new ActionResult(ActionId, 107);
+                }
+
+            return new ActionResult();
+        }
+
+        private ActionResult OldFtpUpload(IJob job)
         {
             var actionResult = Check(job.Profile);
             if (!actionResult)
@@ -88,7 +126,7 @@ namespace clawSoft.clawPDF.Core.Actions
 
             Logger.Debug("Creating ftp connection.\r\nServer: " + job.Profile.Ftp.Server + "\r\nUsername: " +
                          job.Profile.Ftp.UserName);
-            var aimanftp = new FtpUploader(job.Profile.Ftp.Server, job.Profile.Ftp.UserName, job.Passwords.FtpPassword);
+            var aimanftp = new RestUploader(job.Profile.Ftp.Server, job.Profile.Ftp.UserName, job.Passwords.FtpPassword);
             var ftp = new FtpConnection(job.Profile.Ftp.Server, job.Profile.Ftp.UserName, job.Passwords.FtpPassword);
 
             try
