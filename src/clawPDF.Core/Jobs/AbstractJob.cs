@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using clawSoft.clawPDF.Core.Actions;
 using clawSoft.clawPDF.Core.Ghostscript.OutputDevices;
 using clawSoft.clawPDF.Core.Settings;
@@ -753,7 +754,14 @@ namespace clawSoft.clawPDF.Core.Jobs
         {
             try
             {
-                FileWrap.Copy(tempFile, outputFile, true);
+                if (Profile.OutputFormat == OutputFormat.Txt)
+                {
+                    string content = File.ReadAllText(tempFile, Encoding.Unicode);
+
+                    File.WriteAllText(outputFile, content, Encoding.UTF8);
+                } else { 
+                        FileWrap.Copy(tempFile, outputFile, true);
+                }
                 Logger.Debug("Copied output file \"{0}\" \r\nto \"{1}\"", tempFile, outputFile);
                 return true;
             }
